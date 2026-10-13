@@ -1,40 +1,291 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página con Fondo de Imagen</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-image: url('https://static.wixstatic.com/media/384c68_eeb3998fce4b48a38d0cc3c55a853d6e~mv2.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-image 1s ease-in-out; /* Agrega una transición */
-        }
-        .button-container {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-        }
-    </style>
-    <script defer type="module" src="https://embeddables.p.mbirdcdn.net/v1/web-components.es.js"></script>
-    <script>
-        const workspaceId = "1b74200c-7199-4b87-b0a1-7c238585f023";
-        window.mbembeds = window.mbembeds || [];
-        function mbinit() { mbembeds.push(arguments); }
-        mbinit(workspaceId);
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SaludVida HIS - Simulación</title>
+<style>
+:root{--azul:#0B2A5B;--azul2:#14397A;--azul3:#1F55B5;--claro:#EAF0FA;--borde:#D5DEEE;--txt:#1B2433;--gris:#6B7790;--ok:#1E8E5A;--warn:#C27A0E;--err:#C0392B}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Roboto,Arial,sans-serif;background:#fff;color:var(--txt);font-size:14px}
+button{font:inherit;cursor:pointer}
+.sim{background:#FFF6D6;color:#6b5200;text-align:center;font-size:12px;padding:4px;border-bottom:1px solid #ecd98a}
+/* login */
+#login{min-height:calc(100vh - 26px);display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#fff 50%,var(--claro))}
+.lbox{width:380px;border:1px solid var(--borde);border-radius:10px;box-shadow:0 8px 30px rgba(11,42,91,.12);overflow:hidden;background:#fff}
+.lbox .top{background:var(--azul);color:#fff;padding:26px;text-align:center}
+.lbox .top h1{font-size:22px;letter-spacing:.5px}.lbox .top p{font-size:12px;opacity:.8;margin-top:4px}
+.lbox form{padding:24px}
+label{display:block;font-size:12px;font-weight:600;color:var(--azul);margin:10px 0 4px}
+input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--borde);border-radius:6px;font:inherit;background:#fff}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--azul3);border-color:var(--azul3)}
+.btn{background:var(--azul);color:#fff;border:0;padding:8px 16px;border-radius:6px;font-weight:600}
+.btn:hover{background:var(--azul3)}
+.btn.sec{background:#fff;color:var(--azul);border:1px solid var(--azul)}
+.btn.sec:hover{background:var(--claro)}
+.btn.sm{padding:4px 10px;font-size:12px}
+.btn.red{background:var(--err)}
+.full{width:100%;margin-top:18px;padding:10px}
+/* app */
+#app{display:none;height:100vh}
+#app.on{display:flex}
+aside{width:230px;background:var(--azul);color:#fff;display:flex;flex-direction:column;flex-shrink:0}
+aside .brand{padding:18px;font-weight:700;font-size:18px;border-bottom:1px solid rgba(255,255,255,.12)}
+aside .brand small{display:block;font-weight:400;font-size:11px;opacity:.7}
+aside nav{flex:1;overflow:auto;padding:8px 0}
+aside a{display:flex;gap:10px;align-items:center;padding:11px 18px;color:#cdd9f0;text-decoration:none;cursor:pointer;border-left:3px solid transparent}
+aside a:hover{background:var(--azul2);color:#fff}
+aside a.act{background:var(--azul2);color:#fff;border-left-color:#7FB0FF}
+aside .user{padding:14px 18px;border-top:1px solid rgba(255,255,255,.12);font-size:12px}
+main{flex:1;display:flex;flex-direction:column;min-width:0}
+header{background:#fff;border-bottom:2px solid var(--azul);padding:10px 22px;display:flex;align-items:center;gap:16px}
+header h2{color:var(--azul);font-size:18px;flex:1}
+.pctx{background:var(--claro);border:1px solid var(--borde);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--azul);font-weight:600}
+#content{flex:1;overflow:auto;padding:22px;background:#fff}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px}
+.card{border:1px solid var(--borde);border-radius:8px;padding:16px;background:#fff}
+.card .n{font-size:28px;font-weight:700;color:var(--azul)}
+.card .l{color:var(--gris);font-size:12px;margin-top:2px}
+.panel{border:1px solid var(--borde);border-radius:8px;margin-bottom:18px;overflow:hidden}
+.panel>h3{background:var(--azul);color:#fff;padding:9px 14px;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+.panel .body{padding:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}aside{width:70px}aside .brand small,aside a span.t,aside .user{display:none}}
+table{width:100%;border-collapse:collapse}
+th{background:var(--claro);color:var(--azul);text-align:left;padding:8px 10px;font-size:12px;border-bottom:1px solid var(--borde)}
+td{padding:8px 10px;border-bottom:1px solid #EEF2F9;vertical-align:top}
+tr:hover td{background:#F7F9FD}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:600}
+.b-ok{background:#DDF3E8;color:var(--ok)}.b-warn{background:#FCEBCB;color:var(--warn)}.b-err{background:#F9DAD6;color:var(--err)}.b-info{background:#DCE8FB;color:var(--azul3)}.b-gray{background:#E8ECF3;color:var(--gris)}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 10px}
+.kv b{color:var(--azul);font-weight:600}
+.toolbar{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
+.toolbar input{max-width:320px}
+.vit{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.vit div{background:var(--claro);border-radius:6px;padding:10px;text-align:center}
+.vit b{display:block;font-size:18px;color:var(--azul)}.vit span{font-size:11px;color:var(--gris)}
+.evo{border-left:3px solid var(--azul3);padding:6px 12px;margin-bottom:12px;background:#FAFBFE}
+.evo small{color:var(--gris)}
+.modalbg{position:fixed;inset:0;background:rgba(11,42,91,.45);display:none;align-items:center;justify-content:center;z-index:50}
+.modalbg.on{display:flex}
+.modal{background:#fff;border-radius:10px;width:480px;max-width:94vw;max-height:90vh;overflow:auto}
+.modal h3{background:var(--azul);color:#fff;padding:12px 18px}
+.modal .mb{padding:16px 18px}
+.modal .ft{padding:12px 18px;border-top:1px solid var(--borde);display:flex;justify-content:flex-end;gap:8px}
+#toast{position:fixed;bottom:22px;right:22px;background:var(--azul);color:#fff;padding:12px 18px;border-radius:8px;display:none;z-index:99;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.empty{color:var(--gris);text-align:center;padding:20px}
+</style>
 </head>
 <body>
-    <div class="button-container">
-        <button onclick="changeBackground()">Cambiar Fondo</button>
-    </div>
-    <script src="script.js"></script>
+
+<div id="app" class="on">
+  <aside>
+    <div class="brand">SaludVida HIS<small>Gestión clínica y administrativa</small></div>
+    <nav id="nav"></nav>
+    <div class="user"><b>Dra. Laura Martínez</b><br>Medicina General · Reg. 000000</div>
+  </aside>
+  <main>
+    <header><h2 id="titulo"></h2><span class="pctx" id="pctx"></span></header>
+    <div id="content"></div>
+  </main>
+</div>
+
+<div class="modalbg" id="mbg"><div class="modal"><h3 id="mt"></h3><div class="mb" id="mb"></div><div class="ft" id="mf"></div></div></div>
+<div id="toast"></div>
+
+<script>
+const HOY='2026-10-13';
+const fmt=d=>{const[a,m,dd]=d.split('-');return `${dd}/${m}/${a}`};
+const $=id=>document.getElementById(id);
+let uid=100;
+
+/* ---------- DATOS FICTICIOS ---------- */
+const DB={
+ pacientes:[
+  {id:'1012462680',tipo:'CC',nombre:'Steven Fernando Caicedo',nac:'1996-03-14',sexo:'Masculino',tel:'300 000 0000',dir:'Calle 00 # 00-00, Bogotá',email:'paciente.demo@example.com',regimen:'Contributivo',nivel:'Categoría A',estado:'Activo',cotizante:'Cotizante',ips:'IPS Central – Bogotá',sangre:'O+',alergias:['Penicilina','Ibuprofeno (leve)'],
+   vitales:[{f:'2026-10-13',ta:'118/76',fc:72,fr:16,temp:36.6,sat:98,peso:74,talla:176}],
+   dx:[{cie:'J30.4',desc:'Rinitis alérgica, no especificada',f:'2026-08-02'},{cie:'M54.5',desc:'Lumbago no especificado',f:'2026-10-05'}],
+   evol:[{f:'2026-10-05',med:'Dra. Laura Martínez',txt:'Paciente consulta por dolor lumbar de 1 semana de evolución, sin irradiación ni déficit neurológico. Examen físico: contractura paravertebral. Plan: analgesia, medidas posturales, estudios de apoyo.'},{f:'2026-08-02',med:'Dr. Andrés Rivas',txt:'Rinitis alérgica estacional. Se formula antihistamínico. Control en 3 meses.'}]},
+  {id:'52874113',tipo:'CC',nombre:'María Alejandra Pérez Torres',nac:'1984-11-02',sexo:'Femenino',tel:'310 000 0001',dir:'Carrera 00 # 00-00',email:'demo2@example.com',regimen:'Contributivo',nivel:'Categoría B',estado:'Activo',cotizante:'Beneficiario',ips:'IPS Norte – Bogotá',sangre:'A+',alergias:['Ninguna conocida'],vitales:[],dx:[{cie:'E11.9',desc:'Diabetes mellitus tipo 2 sin complicaciones',f:'2026-06-10'}],evol:[]},
+  {id:'79456231',tipo:'CC',nombre:'Carlos Andrés Rojas Pinto',nac:'1970-07-21',sexo:'Masculino',tel:'320 000 0002',dir:'Avenida 00 # 00-00',email:'demo3@example.com',regimen:'Subsidiado',nivel:'Nivel 1',estado:'Activo',cotizante:'Cabeza de familia',ips:'IPS Central – Bogotá',sangre:'B+',alergias:['Sulfas'],vitales:[],dx:[{cie:'I10',desc:'Hipertensión esencial (primaria)',f:'2026-03-15'}],evol:[]},
+  {id:'41233987',tipo:'CC',nombre:'Luz Marina Gómez Díaz',nac:'1955-01-30',sexo:'Femenino',tel:'315 000 0003',dir:'Diagonal 00 # 00-00',email:'demo4@example.com',regimen:'Contributivo',nivel:'Categoría A',estado:'Suspendido',cotizante:'Pensionada',ips:'IPS Norte – Bogotá',sangre:'AB+',alergias:['Ninguna conocida'],vitales:[],dx:[],evol:[]}
+ ],
+ citas:[
+  {id:1,pid:'1012462680',esp:'Medicina General',med:'Dra. Laura Martínez',f:'2026-10-13',h:'11:30',estado:'Confirmada',sede:'IPS Central'},
+  {id:2,pid:'1012462680',esp:'Ortopedia y Traumatología',med:'Dr. Felipe Ocampo',f:'2026-10-21',h:'08:20',estado:'Programada',sede:'IPS Central'},
+  {id:3,pid:'1012462680',esp:'Fisioterapia',med:'Ft. Camila Ruiz',f:'2026-10-27',h:'14:00',estado:'Programada',sede:'IPS Norte'},
+  {id:4,pid:'52874113',esp:'Endocrinología',med:'Dra. Sofía Navarro',f:'2026-10-13',h:'09:40',estado:'Atendida',sede:'IPS Norte'},
+  {id:5,pid:'79456231',esp:'Medicina General',med:'Dra. Laura Martínez',f:'2026-10-13',h:'12:10',estado:'Programada',sede:'IPS Central'}
+ ],
+ ordenes:[
+  {id:1,pid:'1012462680',tipo:'Laboratorio',desc:'Hemograma completo',f:'2026-10-05',estado:'Procesada',prio:'Rutina'},
+  {id:2,pid:'1012462680',tipo:'Laboratorio',desc:'Proteína C reactiva',f:'2026-10-05',estado:'Pendiente',prio:'Rutina'},
+  {id:3,pid:'1012462680',tipo:'Imágenes',desc:'Resonancia magnética de columna lumbosacra',f:'2026-10-05',estado:'En autorización',prio:'Prioritaria'},
+  {id:4,pid:'1012462680',tipo:'Procedimiento',desc:'Terapia física – 10 sesiones',f:'2026-10-05',estado:'Autorizada',prio:'Rutina'}
+ ],
+ meds:[
+  {id:1,pid:'1012462680',nom:'Acetaminofén 500 mg tableta',dosis:'1 tableta cada 8 horas por 7 días',cant:21,f:'2026-10-05',estado:'Dispensada'},
+  {id:2,pid:'1012462680',nom:'Loratadina 10 mg tableta',dosis:'1 tableta cada día por 30 días',cant:30,f:'2026-08-02',estado:'Dispensada'}
+ ],
+ labs:[
+  {id:1,oid:1,pid:'1012462680',f:'2026-10-06',res:[['Hemoglobina','15.1','g/dL','13.5 – 17.5'],['Hematocrito','45','%','40 – 52'],['Leucocitos','6.800','/µL','4.500 – 11.000'],['Plaquetas','245.000','/µL','150.000 – 450.000']]}
+ ],
+ auts:[
+  {id:'AUT-000731',oid:3,pid:'1012462680',serv:'Resonancia magnética de columna lumbosacra',f:'2026-10-05',estado:'En trámite'},
+  {id:'AUT-000729',oid:4,pid:'1012462680',serv:'Terapia física – 10 sesiones',f:'2026-10-05',estado:'Autorizada'}
+ ]
+};
+const ST={pid:'1012462680',view:'dashboard'};
+const P=()=>DB.pacientes.find(p=>p.id===ST.pid);
+const edad=n=>{const a=new Date(HOY),b=new Date(n);let e=a.getFullYear()-b.getFullYear();if(a<new Date(a.getFullYear(),b.getMonth(),b.getDate()))e--;return e};
+const badge=e=>{const m={Confirmada:'ok',Programada:'info',Atendida:'gray',Cancelada:'err',Procesada:'ok',Pendiente:'warn','En autorización':'warn',Autorizada:'ok','En trámite':'warn',Dispensada:'ok',Activo:'ok',Suspendido:'err',Negada:'err'};return `<span class="badge b-${m[e]||'gray'}">${e}</span>`};
+
+/* ---------- NAVEGACIÓN ---------- */
+const MENU=[['dashboard','🏠','Inicio'],['pacientes','👥','Pacientes'],['historia','📋','Historia clínica'],['citas','📅','Citas médicas'],['ordenes','📝','Órdenes médicas'],['meds','💊','Fórmulas / Medicamentos'],['labs','🧪','Resultados de laboratorio'],['auts','✅','Autorizaciones'],['afil','🪪','Afiliación']];
+function go(v){ST.view=v;render()}
+function render(){
+  $('nav').innerHTML=MENU.map(m=>`<a class="${ST.view===m[0]?'act':''}" onclick="go('${m[0]}')">${m[1]}<span class="t">${m[2]}</span></a>`).join('');
+  $('titulo').textContent=MENU.find(m=>m[0]===ST.view)[2];
+  const p=P();$('pctx').textContent=`Paciente: ${p.nombre} · ${p.tipo} ${p.id}`;
+  $('content').innerHTML=V[ST.view]();
+}
+function toast(t){const x=$('toast');x.textContent=t;x.style.display='block';clearTimeout(x._t);x._t=setTimeout(()=>x.style.display='none',2800)}
+function modal(t,body,btns){$('mt').textContent=t;$('mb').innerHTML=body;$('mf').innerHTML=btns;$('mbg').classList.add('on')}
+function cerrar(){$('mbg').classList.remove('on')}
+const none=(a,c)=>a.length?'':`<div class="empty">${c}</div>`;
+
+/* ---------- VISTAS ---------- */
+const V={
+dashboard(){
+  const p=P(),cs=DB.citas.filter(c=>c.pid===p.id),os=DB.ordenes.filter(o=>o.pid===p.id);
+  const hoy=DB.citas.filter(c=>c.f===HOY);
+  return `<div class="cards">
+   <div class="card"><div class="n">${hoy.length}</div><div class="l">Citas de hoy (todas las agendas)</div></div>
+   <div class="card"><div class="n">${cs.filter(c=>c.estado!=='Cancelada'&&c.estado!=='Atendida').length}</div><div class="l">Citas activas del paciente</div></div>
+   <div class="card"><div class="n">${os.filter(o=>o.estado!=='Procesada'&&o.estado!=='Autorizada').length}</div><div class="l">Órdenes pendientes</div></div>
+   <div class="card"><div class="n">${DB.auts.filter(a=>a.pid===p.id&&a.estado==='En trámite').length}</div><div class="l">Autorizaciones en trámite</div></div></div>
+  <div class="grid2">
+   <div class="panel"><h3>Paciente en contexto</h3><div class="body"><div class="kv">
+    <b>Nombre</b><span>${p.nombre}</span><b>Documento</b><span>${p.tipo} ${p.id}</span><b>Edad / Sexo</b><span>${edad(p.nac)} años · ${p.sexo}</span>
+    <b>Estado afiliación</b><span>${badge(p.estado)}</span><b>Alergias</b><span>${p.alergias.map(a=>`<span class="badge b-err">${a}</span>`).join(' ')}</span></div>
+    <div style="margin-top:14px"><button class="btn sm" onclick="go('historia')">Abrir historia clínica</button></div></div></div>
+   <div class="panel"><h3>Agenda de hoy · ${fmt(HOY)}</h3><div class="body">
+    <table><tr><th>Hora</th><th>Paciente</th><th>Servicio</th><th>Estado</th></tr>
+    ${hoy.sort((a,b)=>a.h.localeCompare(b.h)).map(c=>{const pa=DB.pacientes.find(x=>x.id===c.pid);return `<tr><td>${c.h}</td><td>${pa.nombre}</td><td>${c.esp}</td><td>${badge(c.estado)}</td></tr>`}).join('')}</table></div></div>
+  </div>`},
+
+pacientes(){
+  return `<div class="toolbar"><input id="q" placeholder="Buscar por nombre o documento…" oninput="filtrarP()"><button class="btn" onclick="nuevoPaciente()">+ Nuevo paciente</button></div>
+  <div class="panel"><table><thead><tr><th>Documento</th><th>Nombre</th><th>Edad</th><th>Régimen</th><th>Estado</th><th></th></tr></thead><tbody id="tp">${filasP(DB.pacientes)}</tbody></table></div>`},
+historia(){
+  const p=P(),v=p.vitales[0];
+  return `<div class="panel"><h3>Datos del paciente</h3><div class="body"><div class="grid2"><div class="kv">
+   <b>Nombre</b><span>${p.nombre}</span><b>Documento</b><span>${p.tipo} ${p.id}</span><b>Nacimiento</b><span>${fmt(p.nac)} (${edad(p.nac)} años)</span><b>Sexo</b><span>${p.sexo}</span><b>Grupo sanguíneo</b><span>${p.sangre}</span></div>
+   <div class="kv"><b>Teléfono</b><span>${p.tel}</span><b>Dirección</b><span>${p.dir}</span><b>Correo</b><span>${p.email}</span><b>Alergias</b><span>${p.alergias.map(a=>`<span class="badge b-err">${a}</span>`).join(' ')}</span></div></div></div></div>
+  <div class="panel"><h3>Signos vitales ${v?`· ${fmt(v.f)}`:''}<button class="btn sm sec" onclick="nuevoVital()">+ Registrar</button></h3><div class="body">
+   ${v?`<div class="vit"><div><b>${v.ta}</b><span>T.A. mmHg</span></div><div><b>${v.fc}</b><span>FC lpm</span></div><div><b>${v.fr}</b><span>FR rpm</span></div><div><b>${v.temp}°</b><span>Temp °C</span></div><div><b>${v.sat}%</b><span>SatO₂</span></div><div><b>${v.peso}</b><span>Peso kg</span></div><div><b>${(v.peso/Math.pow(v.talla/100,2)).toFixed(1)}</b><span>IMC</span></div></div>`:'<div class="empty">Sin registros</div>'}</div></div>
+  <div class="grid2">
+   <div class="panel"><h3>Diagnósticos (CIE-10)</h3><div class="body"><table><tr><th>Código</th><th>Descripción</th><th>Fecha</th></tr>${p.dx.map(d=>`<tr><td><b>${d.cie}</b></td><td>${d.desc}</td><td>${fmt(d.f)}</td></tr>`).join('')}</table>${none(p.dx,'Sin diagnósticos')}</div></div>
+   <div class="panel"><h3>Evoluciones <button class="btn sm sec" onclick="nuevaEvol()">+ Nueva evolución</button></h3><div class="body">${p.evol.map(e=>`<div class="evo"><small>${fmt(e.f)} · ${e.med}</small><div>${e.txt}</div></div>`).join('')}${none(p.evol,'Sin evoluciones')}</div></div>
+  </div>`},
+citas(){
+  const cs=DB.citas.filter(c=>c.pid===ST.pid).sort((a,b)=>(a.f+a.h).localeCompare(b.f+b.h));
+  return `<div class="toolbar"><button class="btn" onclick="nuevaCita()">+ Asignar cita</button></div>
+  <div class="panel"><table><tr><th>Fecha</th><th>Hora</th><th>Especialidad</th><th>Profesional</th><th>Sede</th><th>Estado</th><th></th></tr>
+  ${cs.map(c=>`<tr><td>${fmt(c.f)}</td><td>${c.h}</td><td>${c.esp}</td><td>${c.med}</td><td>${c.sede}</td><td>${badge(c.estado)}</td><td>
+   ${c.estado==='Programada'?`<button class="btn sm" onclick="setCita(${c.id},'Confirmada')">Confirmar</button> `:''}
+   ${['Programada','Confirmada'].includes(c.estado)?`<button class="btn sm red" onclick="setCita(${c.id},'Cancelada')">Cancelar</button>`:''}
+   ${c.estado==='Confirmada'?`<button class="btn sm sec" onclick="setCita(${c.id},'Atendida')">Atender</button>`:''}</td></tr>`).join('')}</table>${none(cs,'Sin citas')}</div>`},
+ordenes(){
+  const os=DB.ordenes.filter(o=>o.pid===ST.pid);
+  return `<div class="toolbar"><button class="btn" onclick="nuevaOrden()">+ Nueva orden médica</button></div>
+  <div class="panel"><table><tr><th>N°</th><th>Fecha</th><th>Tipo</th><th>Descripción</th><th>Prioridad</th><th>Estado</th><th></th></tr>
+  ${os.map(o=>`<tr><td>OM-${String(o.id).padStart(5,'0')}</td><td>${fmt(o.f)}</td><td>${o.tipo}</td><td>${o.desc}</td><td>${o.prio}</td><td>${badge(o.estado)}</td><td>
+   ${o.estado==='Pendiente'&&o.tipo==='Laboratorio'?`<button class="btn sm" onclick="procesarLab(${o.id})">Procesar muestra</button>`:''}</td></tr>`).join('')}</table>${none(os,'Sin órdenes')}</div>`},
+meds(){
+  const ms=DB.meds.filter(m=>m.pid===ST.pid);
+  return `<div class="toolbar"><button class="btn" onclick="nuevaFormula()">+ Nueva fórmula</button></div>
+  <div class="panel"><table><tr><th>Fecha</th><th>Medicamento</th><th>Posología</th><th>Cant.</th><th>Estado</th><th></th></tr>
+  ${ms.map(m=>`<tr><td>${fmt(m.f)}</td><td><b>${m.nom}</b></td><td>${m.dosis}</td><td>${m.cant}</td><td>${badge(m.estado)}</td><td>${m.estado==='Pendiente'?`<button class="btn sm" onclick="dispensar(${m.id})">Dispensar</button>`:''}</td></tr>`).join('')}</table>${none(ms,'Sin fórmulas')}</div>`},
+labs(){
+  const ls=DB.labs.filter(l=>l.pid===ST.pid);
+  return ls.map(l=>{const o=DB.ordenes.find(x=>x.id===l.oid);return `<div class="panel"><h3>${o.desc} · ${fmt(l.f)}</h3><div class="body"><table><tr><th>Parámetro</th><th>Resultado</th><th>Unidad</th><th>Referencia</th></tr>${l.res.map(r=>`<tr><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</table></div></div>`}).join('')||'<div class="empty">Sin resultados disponibles. Procese una orden de laboratorio desde "Órdenes médicas".</div>'},
+auts(){
+  const as=DB.auts.filter(a=>a.pid===ST.pid);
+  return `<div class="panel"><table><tr><th>Código</th><th>Fecha</th><th>Servicio</th><th>Estado</th><th></th></tr>
+  ${as.map(a=>`<tr><td><b>${a.id}</b></td><td>${fmt(a.f)}</td><td>${a.serv}</td><td>${badge(a.estado)}</td><td>${a.estado==='En trámite'?`<button class="btn sm" onclick="resolverAut('${a.id}','Autorizada')">Aprobar</button> <button class="btn sm red" onclick="resolverAut('${a.id}','Negada')">Negar</button>`:''}</td></tr>`).join('')}</table>${none(as,'Sin autorizaciones')}</div>`},
+afil(){
+  const p=P();
+  return `<div class="panel"><h3>Estado de afiliación</h3><div class="body"><div class="kv">
+   <b>Estado</b><span>${badge(p.estado)}</span><b>Régimen</b><span>${p.regimen}</span><b>Categoría / Nivel</b><span>${p.nivel}</span><b>Tipo de afiliado</b><span>${p.cotizante}</span><b>IPS primaria</b><span>${p.ips}</span></div>
+   ${p.estado==='Suspendido'?'<p style="margin-top:12px;color:var(--err)">⚠ Afiliación suspendida: los servicios requieren validación de derechos.</p>':'<p style="margin-top:12px;color:var(--ok)">✔ Derechos vigentes para la atención.</p>'}</div></div>`}
+};
+
+/* ---------- ACCIONES ---------- */
+function filasP(l){return l.map(p=>`<tr><td>${p.tipo} ${p.id}</td><td><b>${p.nombre}</b></td><td>${edad(p.nac)}</td><td>${p.regimen}</td><td>${badge(p.estado)}</td><td><button class="btn sm" onclick="selP('${p.id}')">Seleccionar</button></td></tr>`).join('')}
+function filtrarP(){const q=$('q').value.toLowerCase();$('tp').innerHTML=filasP(DB.pacientes.filter(p=>p.nombre.toLowerCase().includes(q)||p.id.includes(q)))}
+function selP(id){ST.pid=id;toast('Paciente seleccionado');go('historia')}
+function nuevoPaciente(){
+  modal('Nuevo paciente',`<label>Tipo doc.</label><select id="np_t"><option>CC</option><option>TI</option><option>CE</option><option>RC</option></select><label>Documento</label><input id="np_i"><label>Nombre completo</label><input id="np_n"><label>Fecha nacimiento</label><input id="np_f" type="date"><label>Sexo</label><select id="np_s"><option>Masculino</option><option>Femenino</option></select>`,
+  `<button class="btn sec" onclick="cerrar()">Cancelar</button><button class="btn" onclick="guardarPaciente()">Guardar</button>`)}
+function guardarPaciente(){
+  const i=$('np_i').value.trim(),n=$('np_n').value.trim(),f=$('np_f').value;
+  if(!i||!n||!f)return toast('Complete todos los campos');
+  if(DB.pacientes.some(p=>p.id===i))return toast('Ya existe un paciente con ese documento');
+  DB.pacientes.push({id:i,tipo:$('np_t').value,nombre:n,nac:f,sexo:$('np_s').value,tel:'—',dir:'—',email:'—',regimen:'Contributivo',nivel:'Categoría A',estado:'Activo',cotizante:'Cotizante',ips:'IPS Central – Bogotá',sangre:'—',alergias:['Ninguna conocida'],vitales:[],dx:[],evol:[]});
+  cerrar();toast('Paciente creado');render()}
+function nuevaCita(){
+  modal('Asignar cita',`<label>Especialidad</label><select id="c_e"><option>Medicina General</option><option>Ortopedia y Traumatología</option><option>Fisioterapia</option><option>Cardiología</option><option>Dermatología</option><option>Odontología</option></select><label>Profesional</label><select id="c_m"><option>Dra. Laura Martínez</option><option>Dr. Felipe Ocampo</option><option>Dra. Sofía Navarro</option></select><label>Fecha</label><input id="c_f" type="date" min="${HOY}" value="${HOY}"><label>Hora</label><select id="c_h">${['07:00','08:20','09:40','11:00','14:00','15:20','16:40'].map(h=>`<option>${h}</option>`).join('')}</select><label>Sede</label><select id="c_s"><option>IPS Central</option><option>IPS Norte</option></select>`,
+  `<button class="btn sec" onclick="cerrar()">Cancelar</button><button class="btn" onclick="guardarCita()">Asignar</button>`)}
+function guardarCita(){
+  if(P().estado!=='Activo')return toast('Afiliación no vigente: no se puede asignar');
+  const c={id:++uid,pid:ST.pid,esp:$('c_e').value,med:$('c_m').value,f:$('c_f').value,h:$('c_h').value,estado:'Programada',sede:$('c_s').value};
+  if(DB.citas.some(x=>x.med===c.med&&x.f===c.f&&x.h===c.h&&!['Cancelada'].includes(x.estado)))return toast('Horario no disponible para ese profesional');
+  DB.citas.push(c);cerrar();toast('Cita asignada');render()}
+function setCita(id,e){DB.citas.find(c=>c.id===id).estado=e;toast('Cita '+e.toLowerCase());render()}
+function nuevaOrden(){
+  modal('Nueva orden médica',`<label>Tipo</label><select id="o_t"><option>Laboratorio</option><option>Imágenes</option><option>Procedimiento</option><option>Interconsulta</option></select><label>Descripción</label><input id="o_d" placeholder="Ej: Glicemia en ayunas"><label>Prioridad</label><select id="o_p"><option>Rutina</option><option>Prioritaria</option><option>Urgente</option></select>`,
+  `<button class="btn sec" onclick="cerrar()">Cancelar</button><button class="btn" onclick="guardarOrden()">Generar</button>`)}
+function guardarOrden(){
+  const d=$('o_d').value.trim();if(!d)return toast('Ingrese la descripción');
+  const t=$('o_t').value,req=t!=='Laboratorio';
+  const o={id:DB.ordenes.length+1,pid:ST.pid,tipo:t,desc:d,f:HOY,estado:req?'En autorización':'Pendiente',prio:$('o_p').value};
+  DB.ordenes.push(o);
+  if(req)DB.auts.push({id:'AUT-'+String(740+DB.auts.length).padStart(6,'0'),oid:o.id,pid:ST.pid,serv:d,f:HOY,estado:'En trámite'});
+  cerrar();toast(req?'Orden generada · autorización en trámite':'Orden generada');render()}
+function procesarLab(id){
+  const o=DB.ordenes.find(x=>x.id===id);o.estado='Procesada';
+  const r=n=>(Math.random()*n).toFixed(1);
+  DB.labs.push({id:++uid,oid:id,pid:o.pid,f:HOY,res:[['Resultado principal',r(10),'mg/L','0 – 5'],['Control interno','OK','—','—']]});
+  toast('Muestra procesada · resultado disponible');render()}
+function resolverAut(id,e){
+  const a=DB.auts.find(x=>x.id===id);a.estado=e;
+  const o=DB.ordenes.find(x=>x.id===a.oid);if(o)o.estado=e==='Autorizada'?'Autorizada':'Negada';
+  toast('Autorización '+e.toLowerCase());render()}
+function nuevaFormula(){
+  modal('Nueva fórmula médica',`<label>Medicamento</label><input id="m_n" placeholder="Ej: Naproxeno 500 mg tableta"><label>Posología</label><input id="m_d" placeholder="1 tableta cada 12 horas por 5 días"><label>Cantidad</label><input id="m_c" type="number" min="1" value="10">`,
+  `<button class="btn sec" onclick="cerrar()">Cancelar</button><button class="btn" onclick="guardarFormula()">Prescribir</button>`)}
+function guardarFormula(){
+  const n=$('m_n').value.trim(),d=$('m_d').value.trim();if(!n||!d)return toast('Complete los campos');
+  const al=P().alergias.find(a=>n.toLowerCase().includes(a.split(' ')[0].toLowerCase()));
+  if(al&&al!=='Ninguna')return toast('⚠ ALERTA: posible alergia registrada – '+al);
+  DB.meds.push({id:++uid,pid:ST.pid,nom:n,dosis:d,cant:+$('m_c').value,f:HOY,estado:'Pendiente'});cerrar();toast('Fórmula registrada');render()}
+function dispensar(id){DB.meds.find(m=>m.id===id).estado='Dispensada';toast('Medicamento dispensado');render()}
+function nuevaEvol(){
+  modal('Nueva evolución',`<label>Nota de evolución</label><textarea id="e_t" rows="6"></textarea><label>Diagnóstico CIE-10 (opcional)</label><input id="e_c" placeholder="Código – descripción"><label></label>`,
+  `<button class="btn sec" onclick="cerrar()">Cancelar</button><button class="btn" onclick="guardarEvol()">Guardar</button>`)}
+function guardarEvol(){
+  const t=$('e_t').value.trim();if(!t)return toast('Escriba la nota');
+  const p=P();p.evol.unshift({f:HOY,med:'Dra. Laura Martínez',txt:t});
+  const c=$('e_c').value.trim();if(c){const[a,...b]=c.split(/[-–]/);p.dx.unshift({cie:a.trim().toUpperCase(),desc:b.join('-').trim()||'—',f:HOY})}
+  cerrar();toast('Evolución guardada');render()}
+function nuevoVital(){
+  modal('Registrar signos vitales',`<div class="grid2"><div><label>T.A.</label><input id="v_ta" value="120/80"></div><div><label>FC</label><input id="v_fc" type="number" value="72"></div><div><label>FR</label><input id="v_fr" type="number" value="16"></div><div><label>Temp °C</label><input id="v_t" type="number" step="0.1" value="36.6"></div><div><label>SatO₂ %</label><input id="v_s" type="number" value="98"></div><div><label>Peso kg</label><input id="v_p" type="number" value="70"></div></div><label>Talla cm</label><input id="v_h" type="number" value="170">`,
+  `<button class="btn sec" onclick="cerrar()">Cancelar</button><button class="btn" onclick="guardarVital()">Guardar</button>`)}
+function guardarVital(){
+  P().vitales.unshift({f:HOY,ta:$('v_ta').value,fc:+$('v_fc').value,fr:+$('v_fr').value,temp:+$('v_t').value,sat:+$('v_s').value,peso:+$('v_p').value,talla:+$('v_h').value});
+  cerrar();toast('Signos vitales registrados');render()}
+render();
+</script>
 </body>
 </html>
